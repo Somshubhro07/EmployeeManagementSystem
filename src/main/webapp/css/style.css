@@ -1,0 +1,361 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Manrope', sans-serif;
+  background-color: #f8f9fa;
+  background-image: 
+    radial-gradient(at 0% 0%, hsla(0, 0%, 100%, 1) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, hsla(210, 10%, 92%, 1) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, hsla(210, 5%, 95%, 1) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, hsla(0, 0%, 100%, 1) 0px, transparent 50%);
+  background-attachment: fixed;
+  color: #000000;
+  line-height: 1.6;
+  padding: 20px;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6, .brand-name {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin-bottom: 1rem;
+}
+
+/* Header bar */
+.header-bar {
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.5rem;
+}
+
+.brand-dot {
+  width: 12px;
+  height: 12px;
+  background-color: #000000;
+}
+
+.user-nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.user-tag {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 6px 12px;
+  border: 1px solid #000000;
+}
+
+.btn-logout {
+  color: #666666;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: color 0.2s ease;
+}
+
+.btn-logout:hover {
+  color: #000000;
+}
+
+/* Layouts */
+.main-wrapper {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.layout-with-sidebar {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Sidebar */
+.sidebar-menu {
+  list-style: none;
+}
+
+.sidebar-item a {
+  display: block;
+  padding: 12px 16px;
+  color: #666666;
+  text-decoration: none;
+  font-weight: 500;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.sidebar-item a:hover, .sidebar-item.active a {
+  color: #000000;
+  border: 1px solid #000000;
+}
+
+/* Cards & Content blocks */
+.card {
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  padding: 3rem;
+}
+
+/* Forms & Input fields */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #000000;
+  margin-bottom: 8px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 14px 16px;
+  font-family: inherit;
+  font-size: 1rem;
+  border: 1px solid #e5e5e5;
+  background-color: #ffffff;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.form-control:focus {
+  border-color: #000000;
+}
+
+/* Buttons */
+.btn {
+  display: inline-block;
+  padding: 14px 24px;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 1px solid #000000;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.btn-secondary {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.btn-secondary:hover {
+  background-color: #f5f5f5;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.btn-action {
+  padding: 8px 16px;
+  font-size: 0.75rem;
+}
+
+/* Alerts */
+.alert {
+  padding: 1rem;
+  margin-bottom: 2rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-left: 4px solid #000000;
+  background: #f9f9f9;
+}
+
+.alert-error {
+  border-left-color: #000000;
+  background: #000000;
+  color: #ffffff;
+}
+
+.alert-success {
+  border-left-color: #000000;
+}
+
+/* Tables */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 2rem;
+}
+
+.custom-table th {
+  padding: 1rem;
+  border-bottom: 2px solid #000000;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-align: left;
+  color: #000000;
+}
+
+.custom-table th a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.custom-table td {
+  padding: 1.25rem 1rem;
+  border-bottom: 1px solid #e5e5e5;
+  font-size: 0.95rem;
+  vertical-align: middle;
+}
+
+.custom-table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.custom-table tbody tr:hover {
+  background-color: #fafafa;
+}
+
+/* Pagination */
+.pagination-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #000000;
+}
+
+.pagination-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.pagination-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid #e5e5e5;
+  color: #000000;
+  text-decoration: none;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+
+.pagination-link:hover, .pagination-link.active {
+  background-color: #000000;
+  color: #ffffff;
+  border-color: #000000;
+}
+
+.pagination-link.disabled {
+  pointer-events: none;
+  color: #cccccc;
+  border-color: #eeeeee;
+}
+
+/* Login Page specific styling */
+.login-body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 0;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 440px;
+  padding: 4rem;
+  border: 2px solid #000000;
+  box-shadow: 12px 12px 0px #000000;
+}
+
+.login-header {
+  margin-bottom: 3rem;
+}
+
+.login-title {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.login-subtitle {
+  color: #666666;
+  font-size: 1rem;
+}
+
+/* Profile details */
+.profile-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 2rem;
+}
+
+.profile-field {
+  padding: 24px;
+  border: 1px solid #e5e5e5;
+}
+
+.profile-field-label {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #666666;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+}
+
+.profile-field-value {
+  font-size: 1.25rem;
+  font-weight: 500;
+}
