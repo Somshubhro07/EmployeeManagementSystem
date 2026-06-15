@@ -28,21 +28,17 @@
         
         <!-- Sidebar Navigation -->
         <aside class="sidebar">
-            <div class="sidebar-sticky">
-                <h2 class="sidebar-title">Navigation</h2>
-                <ul class="sidebar-menu">
-                    <li class="sidebar-item active">
-                        <a href="${pageContext.request.contextPath}/admin/dashboard">
-                            Dashboard
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="${pageContext.request.contextPath}/admin/dashboard?action=add">
-                            Add Employee
-                        </a>
-                    </li>
-                </ul>
-            </div>
+            <ul class="sidebar-menu">
+                <li class="sidebar-item active">
+                    <a href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="${pageContext.request.contextPath}/admin/dashboard?action=add">Add Employee</a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="${pageContext.request.contextPath}/admin/dashboard?action=tasks">Tasks</a>
+                </li>
+            </ul>
         </aside>
 
         <!-- Dashboard Content -->
@@ -63,17 +59,30 @@
                 <c:remove var="errorMsg" scope="session" />
             </c:if>
 
+            <c:if test="${not empty stats}">
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2rem;">
+                    <div class="card" style="padding: 1.5rem;">
+                        <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #666666;">Total Employees</div>
+                        <div style="font-family: 'Syne', sans-serif; font-size: 2.5rem; font-weight: 700;">${stats.totalEmployees}</div>
+                    </div>
+                    <div class="card" style="padding: 1.5rem;">
+                        <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #666666;">Avg Salary</div>
+                        <div style="font-family: 'Syne', sans-serif; font-size: 2.5rem; font-weight: 700;"><fmt:formatNumber value="${stats.avgSalary}" type="number" maxFractionDigits="0"/></div>
+                    </div>
+                    <div class="card" style="padding: 1.5rem;">
+                        <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #666666;">Monthly Bill</div>
+                        <div style="font-family: 'Syne', sans-serif; font-size: 2.5rem; font-weight: 700;"><fmt:formatNumber value="${stats.totalSalaryBill}" type="number" maxFractionDigits="0"/></div>
+                    </div>
+                </div>
+            </c:if>
+
             <div class="card">
-                <div class="dashboard-header">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                     <div>
                         <h1 class="page-title">Employees</h1>
-                        <p style="color: #666666; font-size: 0.9rem; margin-top: 0.25rem;">
-                            Manage active records &bull; Total Count: <strong><c:out value="${totalCount}" /></strong>
-                        </p>
+                        <p style="color: #666666; font-size: 0.9rem; margin-top: 0.25rem;">Total: <strong><c:out value="${totalCount}" /></strong></p>
                     </div>
-                    <a href="${pageContext.request.contextPath}/admin/dashboard?action=add" class="btn btn-primary">
-                        Add Employee
-                    </a>
+                    <a href="${pageContext.request.contextPath}/admin/dashboard?action=add" class="btn btn-primary">Add Employee</a>
                 </div>
 
                 <!-- Employees Table -->

@@ -12,6 +12,8 @@ public class Employee {
     private BigDecimal salary;
     private String email;
     private String phone;
+    private String address;
+    private String state;
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
@@ -37,6 +39,12 @@ public class Employee {
 
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
+
+    public String getAddress() { return address; }
+    public void setAddress(String address) { this.address = address; }
+
+    public String getState() { return state; }
+    public void setState(String state) { this.state = state; }
 
     public Timestamp getCreatedAt() { return createdAt; }
     public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }

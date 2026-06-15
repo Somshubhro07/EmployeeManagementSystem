@@ -27,21 +27,17 @@
         
         <!-- Sidebar Navigation -->
         <aside class="sidebar">
-            <div class="sidebar-sticky">
-                <h2 class="sidebar-title">Navigation</h2>
-                <ul class="sidebar-menu">
-                    <li class="sidebar-item">
-                        <a href="${pageContext.request.contextPath}/admin/dashboard">
-                            Dashboard
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="${pageContext.request.contextPath}/admin/dashboard?action=add">
-                            Add Employee
-                        </a>
-                    </li>
-                </ul>
-            </div>
+            <ul class="sidebar-menu">
+                <li class="sidebar-item">
+                    <a href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="${pageContext.request.contextPath}/admin/dashboard?action=add">Add Employee</a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="${pageContext.request.contextPath}/admin/dashboard?action=tasks">Tasks</a>
+                </li>
+            </ul>
         </aside>
 
         <!-- Main Workspace Area -->
@@ -95,9 +91,20 @@
                         </div>
                     </div>
 
-                    <div class="form-group" style="margin-bottom: 2rem;">
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
                         <label for="salary" class="form-label">Salary (Monthly INR)</label>
                         <input type="number" step="0.01" id="salary" name="salary" class="form-control" placeholder="e.g. 75000.00" required value="<c:out value='${employee.salary}'/>">
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="address" class="form-label">Address</label>
+                            <input type="text" id="address" name="address" class="form-control" placeholder="e.g. 12 MG Road" value="<c:out value='${employee.address}'/>">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="state" class="form-label">State</label>
+                            <input type="text" id="state" name="state" class="form-control" placeholder="e.g. Maharashtra" value="<c:out value='${employee.state}'/>">
+                        </div>
                     </div>
 
                     <div style="display: flex; gap: 1rem; justify-content: flex-end;">

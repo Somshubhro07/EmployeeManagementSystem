@@ -8,12 +8,10 @@
 
     <display-name>Employee Management System</display-name>
 
-    <!-- Welcome file -->
     <welcome-file-list>
         <welcome-file>login.jsp</welcome-file>
     </welcome-file-list>
 
-    <!-- Session timeout: 30 minutes -->
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>

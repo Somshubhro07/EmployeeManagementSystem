@@ -1,58 +1,100 @@
-# Employee Management System (EMS) - Architecture
+# Employee Management System - Architecture
 
 ## Overview
-The Employee Management System is a simple, lightweight Java web application designed for a college project. It allows administrators to manage employee records and allows employees to view their profiles.
 
-## Tech Stack
-* **Language**: Java 8
-* **Backend**: Java Servlets (javax.servlet), JSP, JSTL
-* **Database**: SQLite (Zero-config for local testing) / MySQL 8 (For production/college lab)
-* **Build Tool**: Maven
-* **Server**: Apache Tomcat 9
+This is a Java web application that runs on Apache Tomcat. It uses the Model-View-Controller pattern to separate concerns cleanly across layers.
 
-## Application Architecture (MVC)
-The application strictly follows the Model-View-Controller (MVC) design pattern.
 
-### 1. Model Layer (`com.ems.model`)
-Contains plain Java objects (POJOs) that represent the database entities.
-* `User.java`: Represents authentication credentials and roles.
-* `Employee.java`: Represents detailed employee information.
+## Technology Choices
 
-### 2. Data Access Object (DAO) Layer (`com.ems.dao`)
-Handles all direct interactions with the database using JDBC `PreparedStatement`.
-* `UserDAO.java`: Fetches user credentials for login.
-* `EmployeeDAO.java`: Handles CRUD (Create, Read, Update, Delete) operations for employees, including pagination logic.
+- **Java 8** as the language, using the javax.servlet namespace (required for Tomcat 9).
+- **JSP with JSTL** for server-side HTML rendering. No frontend framework.
+- **JDBC with PreparedStatement** for all database access. No ORM.
+- **Maven** for dependency management and WAR packaging.
+- **SQLite** for zero-config local development, with a MySQL option for production.
+- **Vanilla CSS** with Google Fonts (Syne and Manrope) for the UI.
 
-### 3. Controller Layer (`com.ems.servlet`)
-Receives HTTP requests, processes business logic, and routes to the appropriate view.
-* `LoginServlet.java`: Handles authentication and session creation.
-* `LogoutServlet.java`: Destroys the session.
-* `AdminServlet.java`: Maps to `/admin/dashboard`. Manages the employee list and CRUD actions.
-* `EmployeeServlet.java`: Maps to `/employee/profile`. Shows the logged-in user their details.
 
-### 4. View Layer (`src/main/webapp`)
-JSP files handle the presentation logic using JSTL for conditional rendering and loops.
-* Uses a custom "white aesthetic" CSS design (`style.css`) with Syne and Manrope fonts.
-* Avoids generic UI frameworks, ensuring a unique and clean presentation.
+## Architecture Layers
+
+### 1. Model Layer (com.ems.model)
+
+Plain Java objects that represent database rows.
+
+- `User.java` has four fields: id, username, password (SHA-256 hash), and role.
+- `Employee.java` has ten fields matching the employees table columns.
+- `Task.java` has six fields matching the employee_tasks table columns.
+
+These classes have no business logic. They are data containers with getters and setters.
+
+### 2. Data Access Layer (com.ems.dao)
+
+Each DAO class talks to the database using JDBC.
+
+- `UserDAO` has one method: `getUserByUsername`. It is called during login.
+- `EmployeeDAO` handles the full employee lifecycle: list with pagination, get by ID, get by user ID, add (with transactional user creation), update, delete (with transactional user deletion), get all names, and get aggregate statistics.
+- `TaskDAO` handles task CRUD: list all, list by employee name, get by ID, add, update status, and delete.
+
+All DAO methods use try-with-resources for connection management and throw RuntimeException on failure instead of silently swallowing errors.
+
+### 3. Controller Layer (com.ems.servlet)
+
+Servlets receive HTTP requests, call the DAO layer, and forward results to JSP views.
+
+- `LoginServlet` handles GET (show login form) and POST (authenticate and create session).
+- `LogoutServlet` destroys the session.
+- `AdminServlet` is the main admin controller. It uses a single URL (/admin/dashboard) with an "action" query parameter to route between dashboard view, employee CRUD, and task operations.
+- `EmployeeServlet` handles employee profile viewing and task viewing, also routed by an "action" parameter.
+
+### 4. Filter Layer (com.ems.filter)
+
+`AuthFilter` is mapped to `/admin/*` and `/employee/*` in web.xml. It checks for an active session and verifies the user's role matches the URL path they are trying to access. Unauthenticated users are redirected to the login page.
+
+### 5. Utility Layer (com.ems.util)
+
+- `DBConnection` is the database connection factory. It has a boolean toggle to switch between SQLite and MySQL. When using SQLite, it auto-creates tables and seeds sample data on first startup.
+- `PasswordUtil` converts plain text passwords to SHA-256 hex strings.
+- `EmailUtil` sends email via Gmail SMTP. It has an enable/disable toggle so the app works without email configuration.
+
+### 6. View Layer (src/main/webapp)
+
+JSP files render HTML using JSTL tags for loops, conditionals, and formatting. All pages share a common CSS file (style.css) that implements a monochromatic white and black design system.
+
 
 ## Database Schema
-The system uses a highly normalized relational database with two primary tables.
 
-### `users` table
-Stores authentication information.
-* `id`: Primary Key
-* `username`: Unique username (usually derived from email)
-* `password`: SHA-256 Hashed password
-* `role`: Enum ('ADMIN', 'EMPLOYEE')
+Three tables:
 
-### `employees` table
-Stores the actual employee profiles.
-* `id`: Primary Key
-* `user_id`: Foreign Key linking to `users.id`
-* `name`, `department`, `salary`, `email`, `phone`: Core data fields
-* `created_at`, `updated_at`: Audit timestamps
+- `users` stores login credentials and role (ADMIN or EMPLOYEE).
+- `employees` stores profile data and has a foreign key to users.
+- `employee_tasks` stores task assignments. Tasks reference employees by name.
 
-## Security & Utilities
-* **AuthFilter**: A Servlet Filter that intercepts requests to `/admin/*` and `/employee/*` ensuring the user has an active session and the correct role.
-* **PasswordUtil**: Hashes passwords using SHA-256 before database insertion.
-* **DBConnection**: A singleton utility that establishes the JDBC connection, automatically detecting and switching between SQLite and MySQL based on configuration.
+
+## Request Flow
+
+```
+Browser Request
+    |
+    v
+AuthFilter (checks session and role)
+    |
+    v
+Servlet (reads parameters, calls DAO)
+    |
+    v
+DAO (executes SQL via PreparedStatement)
+    |
+    v
+Servlet (sets request attributes)
+    |
+    v
+JSP (renders HTML response)
+```
+
+
+## Security
+
+- Passwords are hashed with SHA-256 before storage. Plain text passwords are never stored.
+- All SQL queries use PreparedStatement to prevent injection.
+- Session timeout is set to 30 minutes in web.xml.
+- AuthFilter blocks direct URL access to protected pages.

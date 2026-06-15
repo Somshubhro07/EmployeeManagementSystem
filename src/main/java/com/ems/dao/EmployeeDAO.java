@@ -4,8 +4,11 @@ import com.ems.model.Employee;
 import com.ems.util.DBConnection;
 import com.ems.util.PasswordUtil;
 import java.sql.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class EmployeeDAO {
 
@@ -18,6 +21,8 @@ public class EmployeeDAO {
         e.setSalary(rs.getBigDecimal("salary"));
         e.setEmail(rs.getString("email"));
         e.setPhone(rs.getString("phone"));
+        e.setAddress(rs.getString("address"));
+        e.setState(rs.getString("state"));
         e.setCreatedAt(rs.getTimestamp("created_at"));
         e.setUpdatedAt(rs.getTimestamp("updated_at"));
         return e;
@@ -102,13 +107,15 @@ public class EmployeeDAO {
                 }
             }
 
-            try (PreparedStatement empStmt = conn.prepareStatement("INSERT INTO employees (user_id, name, department, salary, email, phone) VALUES (?, ?, ?, ?, ?, ?)")) {
+            try (PreparedStatement empStmt = conn.prepareStatement("INSERT INTO employees (user_id, name, department, salary, email, phone, address, state) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")) {
                 empStmt.setInt(1, userId);
                 empStmt.setString(2, e.getName());
                 empStmt.setString(3, e.getDepartment());
                 empStmt.setBigDecimal(4, e.getSalary());
                 empStmt.setString(5, e.getEmail());
                 empStmt.setString(6, e.getPhone());
+                empStmt.setString(7, e.getAddress());
+                empStmt.setString(8, e.getState());
                 empStmt.executeUpdate();
             }
 
@@ -131,7 +138,7 @@ public class EmployeeDAO {
     }
 
     public boolean updateEmployee(Employee e) {
-        String sql = "UPDATE employees SET name = ?, department = ?, salary = ?, email = ?, phone = ? WHERE id = ?";
+        String sql = "UPDATE employees SET name = ?, department = ?, salary = ?, email = ?, phone = ?, address = ?, state = ? WHERE id = ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, e.getName());
@@ -139,11 +146,54 @@ public class EmployeeDAO {
             stmt.setBigDecimal(3, e.getSalary());
             stmt.setString(4, e.getEmail());
             stmt.setString(5, e.getPhone());
-            stmt.setInt(6, e.getId());
+            stmt.setString(6, e.getAddress());
+            stmt.setString(7, e.getState());
+            stmt.setInt(8, e.getId());
             return stmt.executeUpdate() > 0;
         } catch (SQLException ex) {
             throw new RuntimeException("Database error in updateEmployee", ex);
         }
+    }
+
+    public List<String> getAllEmployeeNames() {
+        List<String> names = new ArrayList<>();
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement("SELECT name FROM employees ORDER BY name");
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                names.add(rs.getString("name"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Database error in getAllEmployeeNames", e);
+        }
+        return names;
+    }
+
+    public Map<String, Object> getEmployeeStats() {
+        Map<String, Object> stats = new HashMap<>();
+        try (Connection conn = DBConnection.getConnection();
+             Statement stmt = conn.createStatement()) {
+
+            ResultSet rs1 = stmt.executeQuery("SELECT COUNT(*) AS total, AVG(salary) AS avg_sal, SUM(salary) AS total_sal FROM employees");
+            if (rs1.next()) {
+                stats.put("totalEmployees", rs1.getInt("total"));
+                BigDecimal avg = rs1.getBigDecimal("avg_sal");
+                stats.put("avgSalary", avg != null ? avg : BigDecimal.ZERO);
+                BigDecimal total = rs1.getBigDecimal("total_sal");
+                stats.put("totalSalaryBill", total != null ? total : BigDecimal.ZERO);
+            }
+
+            Map<String, Integer> deptCounts = new HashMap<>();
+            ResultSet rs2 = stmt.executeQuery("SELECT department, COUNT(*) AS cnt FROM employees GROUP BY department ORDER BY cnt DESC");
+            while (rs2.next()) {
+                deptCounts.put(rs2.getString("department"), rs2.getInt("cnt"));
+            }
+            stats.put("departmentCounts", deptCounts);
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Database error in getEmployeeStats", e);
+        }
+        return stats;
     }
 
     public boolean deleteEmployee(int id) {

@@ -24,7 +24,11 @@
     </header>
 
     <main class="main-wrapper">
-        
+        <div style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+            <a href="${pageContext.request.contextPath}/employee/profile" class="btn btn-primary">Profile</a>
+            <a href="${pageContext.request.contextPath}/employee/profile?action=tasks" class="btn btn-secondary">My Tasks</a>
+        </div>
+
         <c:if test="${not empty errorMsg}">
             <div class="alert alert-error">
                 <strong>Error:</strong> <c:out value="${errorMsg}" />
@@ -65,6 +69,16 @@
                     <div class="profile-field">
                         <div class="profile-field-label">Contact Number</div>
                         <div class="profile-field-value"><c:out value="${employee.phone}" /></div>
+                    </div>
+
+                    <div class="profile-field">
+                        <div class="profile-field-label">Address</div>
+                        <div class="profile-field-value" style="font-size: 1rem;"><c:out value="${employee.address}" default="--" /></div>
+                    </div>
+
+                    <div class="profile-field">
+                        <div class="profile-field-label">State</div>
+                        <div class="profile-field-value" style="font-size: 1rem;"><c:out value="${employee.state}" default="--" /></div>
                     </div>
 
                     <div class="profile-field" style="grid-column: span 2;">
